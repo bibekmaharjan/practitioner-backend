@@ -1,13 +1,14 @@
 import cors from 'cors';
 import express from 'express';
-import db from './models/index'
+import db from './models/index';
 import authRoutes from './routes/auth.routes';
+import practitionerRoutes from './routes/practitioner.routes';
 
 const app = express();
 const port = 8080;
 const corsOptions = {
-    origin: "http://localhost:8081"
-  };
+  origin: 'http://localhost:8081',
+};
 
 app.use(cors(corsOptions));
 db.sequelize.sync();
@@ -23,8 +24,8 @@ app.get('/', (req, res) => {
 });
 
 authRoutes(app);
+practitionerRoutes(app);
 
 app.listen(port, () => {
   return console.log(`Express is listening at http://localhost:${port}`);
-  
 });

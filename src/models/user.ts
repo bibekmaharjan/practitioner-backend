@@ -1,15 +1,18 @@
 export default (sequelize, Sequelize) => {
-    const User = sequelize.define("users", {
+  const User = sequelize.define(
+    'users',
+    {
       email: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       password: {
-        type: Sequelize.STRING
-      }
-    },{
-      timestamps: false
-    });
-  
-    return User;
-  };
-  
+        type: Sequelize.STRING,
+      },
+    },
+    {
+      timestamps: false,
+    }
+  );
+
+  return User;
+};

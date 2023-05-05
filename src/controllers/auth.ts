@@ -5,53 +5,63 @@ import config from '../config/auth.config';
 
 const User = db.user;
 
-export const signup = (req, res) => {
-// Save User to Database
-  User.create({
+/**
+ * Initiate signup
+ *
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const signup = async (req, res) => {
+  // Save User to Database
+  await User.create({
     email: req.body.email,
-    password: bcrypt.hashSync(req.body.password, 8)
-  }).then(() => {
-          res.send({ message: "User was registered successfully!" });
-  }).catch(err => {
-    res.status(500).send({ message: err.message });
+    password: bcrypt.hashSync(req.body.password, 8),
   })
-}
-
-export const signin = (req, res) => {
-    User.findOne({
-      where: {
-        email: req.body.email
-      }
+    .then(() => {
+      res.send({ message: 'User was registered successfully!' });
     })
-      .then(user => {
-        if (!user) {
-          return res.status(404).send({ message: "User Not found." });
-        }
-  
-        let passwordIsValid = bcrypt.compareSync(
-          req.body.password,
-          user.password
-        );
-  
-        if (!passwordIsValid) {
-          return res.status(401).send({
-            accessToken: null,
-            message: "Invalid Password!"
-          });
-        }
-  
-        let token = jwt.sign({ id: user.id }, config.secret, {
-          expiresIn: 86400 // 24 hours
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
+/**
+ * Initiate signin flow
+ *
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const signin = async (req, res) => {
+  await User.findOne({
+    where: {
+      email: req.body.email,
+    },
+  })
+    .then((user) => {
+      if (!user) {
+        return res.status(404).send({ message: 'User Not found.' });
+      }
+
+      let passwordIsValid = bcrypt.compareSync(req.body.password, user.password);
+
+      if (!passwordIsValid) {
+        return res.status(401).send({
+          accessToken: null,
+          message: 'Invalid Password!',
         });
-  
-       
-          res.status(200).send({
-            id: user.id,
-            email: user.email,
-            accessToken: token
-          });
-      })
-      .catch(err => {
-        res.status(500).send({ message: err.message });
+      }
+
+      let token = jwt.sign({ id: user.id }, config.secret, {
+        expiresIn: 86400, // 24 hours
       });
-  };
+
+      res.status(200).send({
+        id: user.id,
+        email: user.email,
+        accessToken: token,
+      });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};

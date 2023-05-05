@@ -1,5 +1,9 @@
+import dotenv from 'dotenv';
+
+dotenv.config();
+
 const config = {
-    secret: "practitioner-secret-key"
-}
+  secret: process.env.JWT_SECRET,
+};
 
 export default config;
