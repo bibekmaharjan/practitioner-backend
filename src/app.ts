@@ -2,12 +2,13 @@ import cors from 'cors';
 import express from 'express';
 import db from './models/index';
 import authRoutes from './routes/auth.routes';
+import fileRoutes from './routes/file.routes';
 import practitionerRoutes from './routes/practitioner.routes';
 
 const app = express();
 const port = 8080;
 const corsOptions = {
-  origin: 'http://localhost:8081',
+  origin: 'http://localhost:3000',
 };
 
 app.use(cors(corsOptions));
@@ -24,6 +25,7 @@ app.get('/', (req, res) => {
 });
 
 authRoutes(app);
+fileRoutes(app);
 practitionerRoutes(app);
 
 app.listen(port, () => {

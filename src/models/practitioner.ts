@@ -30,9 +30,23 @@ export default (sequelize, Sequelize) => {
       },
       address: {
         type: Sequelize.STRING,
+        allowNull: true,
+      },
+      city: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
       gender: {
         type: Sequelize.STRING,
+        allowNull: true,
+      },
+      zipcode: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+      },
+      status: {
+        type: Sequelize.STRING,
+        allowNull: true,
       },
     },
     {
