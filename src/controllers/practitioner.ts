@@ -1,4 +1,5 @@
 import db from '../models';
+import cloudinary from '../services/cloudinary';
 
 const Practitioner = db.practitioner;
 
@@ -43,6 +44,9 @@ export const getPractitionerDetail = async (req, res) => {
  */
 export const addPractitioner = async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const imageUrl = result.secure_url;
+
     const createdPractitioner = await Practitioner.create({
       fullName: req.body.fullName,
       email: req.body.email,
@@ -57,6 +61,7 @@ export const addPractitioner = async (req, res) => {
       zipcode: req.body.zipcode,
       status: req.body.status,
       isICUSpecialist: req.body.isICUSpecialist,
+      userImg: imageUrl,
     });
 
     res.send(createdPractitioner);
@@ -75,12 +80,39 @@ export const updatePractitioner = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { fullName, email, contact, dob, workingDays, startTime, endTime, address, city, gender, zipcode, status,isICUSpecialist } =
-      req.body;
+    const {
+      fullName,
+      email,
+      contact,
+      dob,
+      workingDays,
+      startTime,
+      endTime,
+      address,
+      city,
+      gender,
+      zipcode,
+      status,
+      isICUSpecialist,
+    } = req.body;
 
     // update the practitioner record
     const [numUpdated, updatedPractitioner] = await Practitioner.update(
-      { fullName, email, contact, dob, workingDays, startTime, endTime, address, city, gender, zipcode, status, isICUSpecialist },
+      {
+        fullName,
+        email,
+        contact,
+        dob,
+        workingDays,
+        startTime,
+        endTime,
+        address,
+        city,
+        gender,
+        zipcode,
+        status,
+        isICUSpecialist,
+      },
       { where: { id } }
     );
 

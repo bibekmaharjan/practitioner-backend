@@ -1,20 +1,16 @@
-import uploadImageToB2 from '../services/b2';
 import multer from 'multer';
+import cloudinary from '../services/cloudinary';
 
-const upload = multer();
+const upload = multer({ dest: 'uploads/' });
 
 export default (app) => {
   app.post('/upload-image', upload.single('image'), async (req, res) => {
-    const imageFile = req.file;
-    const bucketId = process.env.B2_APPLICATION_BUCKET_ID;
-
     try {
-      await uploadImageToB2(imageFile, bucketId);
-
-      res.status(200).send('Image uploaded successfully!');
+      const result = await cloudinary.uploader.upload(req.file.path);
+      res.json({ imageUrl: result.secure_url });
     } catch (error) {
       console.error(error);
-      res.status(500).send('Failed to upload image!');
+      res.status(500).json({ message: 'Failed to upload image' });
     }
   });
 };

@@ -50,7 +50,10 @@ export default (sequelize, Sequelize) => {
       },
       isICUSpecialist: {
         type: Sequelize.BOOLEAN,
-      }
+      },
+      userImg: {
+        type: Sequelize.STRING,
+      },
     },
     {
       timestamps: false,

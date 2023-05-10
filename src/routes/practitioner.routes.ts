@@ -1,3 +1,5 @@
+import multer from 'multer';
+
 import {
   addPractitioner,
   deletePractitioner,
@@ -5,6 +7,8 @@ import {
   getPractitionerDetail,
   updatePractitioner,
 } from '../controllers/practitioner';
+
+const upload = multer({ dest: 'uploads/' });
 
 export default (app) => {
   app.use(function (req, res, next) {
@@ -16,7 +20,7 @@ export default (app) => {
 
   app.get('/practitioners/:id', getPractitionerDetail);
 
-  app.post('/practitioners', addPractitioner);
+  app.post('/practitioners', upload.single('userImg'), addPractitioner);
 
   app.put('/practitioners/:id', updatePractitioner);
 
