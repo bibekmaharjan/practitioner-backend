@@ -56,6 +56,7 @@ export const addPractitioner = async (req, res) => {
       gender: req.body.gender,
       zipcode: req.body.zipcode,
       status: req.body.status,
+      isICUSpecialist: req.body.isICUSpecialist,
     });
 
     res.send(createdPractitioner);
@@ -74,12 +75,12 @@ export const updatePractitioner = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { fullName, email, contact, dob, workingDays, startTime, endTime, address, city, gender, zipcode, status } =
+    const { fullName, email, contact, dob, workingDays, startTime, endTime, address, city, gender, zipcode, status,isICUSpecialist } =
       req.body;
 
     // update the practitioner record
     const [numUpdated, updatedPractitioner] = await Practitioner.update(
-      { fullName, email, contact, dob, workingDays, startTime, endTime, address, city, gender, zipcode, status },
+      { fullName, email, contact, dob, workingDays, startTime, endTime, address, city, gender, zipcode, status, isICUSpecialist },
       { where: { id } }
     );
 

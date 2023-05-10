@@ -48,6 +48,9 @@ export default (sequelize, Sequelize) => {
         type: Sequelize.STRING,
         allowNull: true,
       },
+      isICUSpecialist: {
+        type: Sequelize.BOOLEAN,
+      }
     },
     {
       timestamps: false,
