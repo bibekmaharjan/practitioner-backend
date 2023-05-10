@@ -1,4 +1,5 @@
 import db from '../models';
+import cloudinary from '../services/cloudinary';
 
 const Practitioner = db.practitioner;
 
@@ -9,13 +10,30 @@ const Practitioner = db.practitioner;
  * @param {Response} res
  */
 export const getPractitioner = async (req, res) => {
-  await Practitioner.findAll()
-    .then((response) => {
-      res.send(response);
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
-    });
+  try {
+    const practitioners = await Practitioner.findAll();
+
+    res.send(practitioners);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
+};
+
+/**
+ * Get detail of practitioner
+ *
+ * @param {Request} req
+ * @param {Response} res
+ */
+export const getPractitionerDetail = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const response = await Practitioner.findByPk(id);
+    res.send(response);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 };
 
 /**
@@ -25,23 +43,31 @@ export const getPractitioner = async (req, res) => {
  * @param {Response} res
  */
 export const addPractitioner = async (req, res) => {
-  await Practitioner.create({
-    fullName: req.body.fullName,
-    email: req.body.email,
-    contact: req.body.contact,
-    dob: req.body.dob,
-    workingDays: req.body.workingDays,
-    startTime: req.body.startTime,
-    endTime: req.body.endTime,
-    address: req.body.address,
-    gender: req.body.gender,
-  })
-    .then((response) => {
-      res.send(response);
-    })
-    .catch((err) => {
-      res.status(500).send({ message: err.message });
+  try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const imageUrl = result.secure_url;
+
+    const createdPractitioner = await Practitioner.create({
+      fullName: req.body.fullName,
+      email: req.body.email,
+      contact: req.body.contact,
+      dob: req.body.dob,
+      workingDays: req.body.workingDays,
+      startTime: req.body.startTime,
+      endTime: req.body.endTime,
+      address: req.body.address,
+      city: req.body.city,
+      gender: req.body.gender,
+      zipcode: req.body.zipcode,
+      status: req.body.status,
+      isICUSpecialist: req.body.isICUSpecialist,
+      userImg: imageUrl,
     });
+
+    res.send(createdPractitioner);
+  } catch (err) {
+    res.status(500).send({ message: err.message });
+  }
 };
 
 /**
@@ -54,11 +80,39 @@ export const updatePractitioner = async (req, res) => {
   try {
     const { id } = req.params;
 
-    const { fullName, email, contact, dob, workingDays, startTime, endTime, address, gender } = req.body;
+    const {
+      fullName,
+      email,
+      contact,
+      dob,
+      workingDays,
+      startTime,
+      endTime,
+      address,
+      city,
+      gender,
+      zipcode,
+      status,
+      isICUSpecialist,
+    } = req.body;
 
     // update the practitioner record
     const [numUpdated, updatedPractitioner] = await Practitioner.update(
-      { fullName, email, contact, dob, workingDays, startTime, endTime, address, gender },
+      {
+        fullName,
+        email,
+        contact,
+        dob,
+        workingDays,
+        startTime,
+        endTime,
+        address,
+        city,
+        gender,
+        zipcode,
+        status,
+        isICUSpecialist,
+      },
       { where: { id } }
     );
 

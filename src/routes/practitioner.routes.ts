@@ -1,5 +1,14 @@
-import { addPractitioner, deletePractitioner, getPractitioner, updatePractitioner } from '../controllers/practitioner';
-import verifyJwtToken from '../middleware/verifyJwtToken';
+import multer from 'multer';
+
+import {
+  addPractitioner,
+  deletePractitioner,
+  getPractitioner,
+  getPractitionerDetail,
+  updatePractitioner,
+} from '../controllers/practitioner';
+
+const upload = multer({ dest: 'uploads/' });
 
 export default (app) => {
   app.use(function (req, res, next) {
@@ -7,11 +16,13 @@ export default (app) => {
     next();
   });
 
-  app.get('/practitioners', verifyJwtToken, getPractitioner);
+  app.get('/practitioners', getPractitioner);
 
-  app.post('/practitioners', verifyJwtToken, addPractitioner);
+  app.get('/practitioners/:id', getPractitionerDetail);
 
-  app.put('/practitioners/:id', verifyJwtToken, updatePractitioner);
+  app.post('/practitioners', upload.single('userImg'), addPractitioner);
 
-  app.delete('/practitioners/:id', verifyJwtToken, deletePractitioner);
+  app.put('/practitioners/:id', updatePractitioner);
+
+  app.delete('/practitioners/:id', deletePractitioner);
 };
