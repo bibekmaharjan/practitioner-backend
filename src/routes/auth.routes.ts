@@ -1,5 +1,7 @@
+import userAuth from '../schemas/userAuth';
 import { signup, signin } from '../controllers/auth';
 import verifySignUp from '../middleware/verifySignup';
+import { schema } from '../middleware/validateSchema';
 
 export default (app) => {
   app.use(function (req, res, next) {
@@ -7,7 +9,7 @@ export default (app) => {
     next();
   });
 
-  app.post('/auth/signup', [verifySignUp.checkDuplicateEmail], signup);
+  app.post('/auth/signup', schema(userAuth), [verifySignUp.checkDuplicateEmail], signup);
 
-  app.post('/auth/signin', signin);
+  app.post('/auth/signin', schema(userAuth), signin);
 };

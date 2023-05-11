@@ -2,7 +2,6 @@ import cors from 'cors';
 import express from 'express';
 import db from './models/index';
 import authRoutes from './routes/auth.routes';
-import fileRoutes from './routes/file.routes';
 import practitionerRoutes from './routes/practitioner.routes';
 
 const app = express();
@@ -25,7 +24,6 @@ app.get('/', (req, res) => {
 });
 
 authRoutes(app);
-fileRoutes(app);
 practitionerRoutes(app);
 
 app.listen(port, () => {

@@ -1,5 +1,7 @@
 import multer from 'multer';
 
+import practitioner from '../schemas/practitioner';
+import { schema } from '../middleware/validateSchema';
 import {
   addPractitioner,
   deletePractitioner,
@@ -20,9 +22,9 @@ export default (app) => {
 
   app.get('/practitioners/:id', getPractitionerDetail);
 
-  app.post('/practitioners', upload.single('userImg'), addPractitioner);
+  app.post('/practitioners',[upload.single('userImg'), schema(practitioner)], addPractitioner);
 
-  app.put('/practitioners/:id', updatePractitioner);
+  app.put('/practitioners/:id',[upload.single('userImg'), schema(practitioner)], updatePractitioner);
 
   app.delete('/practitioners/:id', deletePractitioner);
 };

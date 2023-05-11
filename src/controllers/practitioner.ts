@@ -78,6 +78,9 @@ export const addPractitioner = async (req, res) => {
  */
 export const updatePractitioner = async (req, res) => {
   try {
+    const result = await cloudinary.uploader.upload(req.file.path);
+    const userImg = result.secure_url;
+    
     const { id } = req.params;
 
     const {
@@ -93,7 +96,7 @@ export const updatePractitioner = async (req, res) => {
       gender,
       zipcode,
       status,
-      isICUSpecialist,
+      isICUSpecialist
     } = req.body;
 
     // update the practitioner record
@@ -112,6 +115,7 @@ export const updatePractitioner = async (req, res) => {
         zipcode,
         status,
         isICUSpecialist,
+        userImg
       },
       { where: { id } }
     );
